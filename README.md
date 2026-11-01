@@ -6,7 +6,7 @@ stores the tasks, validates what the page sends, and answers with clear status c
 
 Built for the DecodeLabs Full Stack Development internship (Batch 2026) with **Node.js + Express**.
 
-Built by: _Your Name_
+Built by: FATIMA 
 
 ## What changed since Project 1
 
@@ -98,6 +98,7 @@ Error: `{ "success": false, "error": { "code": "VALIDATION_ERROR", "message": ".
 | 401 Unauthorized | Admin endpoint without `x-api-key` |
 | 403 Forbidden | Admin endpoint with a wrong `x-api-key` |
 | 404 Not Found | Task or route does not exist |
+| 409 Conflict | Creating a task that already exists (same text and category, not finished) |
 | 413 Payload Too Large | Body bigger than 10 KB |
 | 415 Unsupported Media Type | POST/PUT/PATCH without `Content-Type: application/json` |
 | 429 Too Many Requests | More than 200 requests per minute from one IP |

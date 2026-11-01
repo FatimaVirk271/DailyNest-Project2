@@ -12,6 +12,7 @@ const {
 } = require('./middleware');
 
 const app = express();
+app.set('trust proxy', 1); // needed when hosted behind a proxy (Render, etc.)
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '10kb' })); // read JSON bodies (max 10 KB)

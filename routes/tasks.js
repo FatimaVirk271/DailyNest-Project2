@@ -74,6 +74,14 @@ router.post('/', requireJson, (req, res) => {
   if (errors.length) {
     return sendError(res, 400, 'VALIDATION_ERROR', 'Invalid task data', errors);
   }
+  const duplicate = store.all().some(
+  (t) => !t.done &&
+         t.category === clean.category &&
+         t.text.toLowerCase() === clean.text.toLowerCase()
+);
+if (duplicate) {
+  return sendError(res, 409, 'DUPLICATE_TASK', 'This task already exists');
+}
   const task = store.create(clean);
   res.status(201).location(`/api/tasks/${task.id}`).json({ success: true, data: task });
 });
