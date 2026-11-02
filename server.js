@@ -40,7 +40,7 @@ app.use(errorHandler); // any error -> clean JSON (400 / 413 / 500)
 
 // Only start listening when run directly (so tests can import the app)
 if (require.main === module) {
-  app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
     console.log(`DailyNest running on http://localhost:${PORT}`);
   });
 }

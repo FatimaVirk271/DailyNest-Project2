@@ -2,9 +2,23 @@
 // Project 2 says: master endpoints BEFORE complex databases.
 // So tasks live in memory and are saved to a simple JSON file (data.json).
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
-const FILE = process.env.DATA_FILE || path.join(__dirname, 'data.json');
+// If the app folder is read-only (like on SnapDeploy), save in the temp folder instead
+function pickFile() {
+  const wanted = process.env.DATA_FILE || path.join(__dirname, 'data.json');
+  try {
+    fs.accessSync(path.dirname(wanted), fs.constants.W_OK);
+    if (fs.existsSync(wanted)) fs.accessSync(wanted, fs.constants.W_OK);
+    return wanted;
+  } catch (err) {
+    const fallback = path.join(os.tmpdir(), 'dailynest-data.json');
+    console.warn(`Cannot write to ${wanted}, saving to ${fallback} instead`);
+    return fallback;
+  }
+}
+const FILE = pickFile();
 
 // The same four starter tasks DailyNest had in Project 1
 const STARTER = [
@@ -24,13 +38,12 @@ function seed() {
 }
 
 function save() {
-     try {
-       fs.writeFileSync(FILE, JSON.stringify({ tasks, nextId }, null, 2));
-     } catch (err) {
-       // If the disk is read-only (some hosts), keep working in memory
-       console.error('Could not save data file, continuing in memory:', err.message);
-     }
-   }
+  try {
+    fs.writeFileSync(FILE, JSON.stringify({ tasks, nextId }, null, 2));
+  } catch (err) {
+    console.warn('Could not save data file:', err.message);
+  }
+}
 
 // Load saved tasks when the server starts. No file (or a broken one) -> starter tasks.
 try {
