@@ -24,8 +24,13 @@ function seed() {
 }
 
 function save() {
-  fs.writeFileSync(FILE, JSON.stringify({ tasks, nextId }, null, 2));
-}
+     try {
+       fs.writeFileSync(FILE, JSON.stringify({ tasks, nextId }, null, 2));
+     } catch (err) {
+       // If the disk is read-only (some hosts), keep working in memory
+       console.error('Could not save data file, continuing in memory:', err.message);
+     }
+   }
 
 // Load saved tasks when the server starts. No file (or a broken one) -> starter tasks.
 try {
